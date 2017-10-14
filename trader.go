@@ -11,10 +11,15 @@ func Buy(marketName string) {
 	bittrex := bittrex.New(os.Getenv("API_KEY"), os.Getenv("API_SECRET"))
 	coin := strings.Split(marketName, "-")[0]
 	bal, _ := bittrex.GetBalance(coin)
-	if bal.Available < 0.0001 {
+	if bal.Available > 0.0001 {
 		fmt.Println("Not enough captial to buy")
 		return
 	}
+	uuid, err := bittrex.BuyMarket(marketName, bal.Available)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Purchase completed", uuid)
 }
 
 func Sell(marketName string) {
